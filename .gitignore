@@ -1,0 +1,42 @@
+# =========================
+# OS files
+# =========================
+.DS_Store
+
+# =========================
+# Python (mac-host)
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+
+# =========================
+# Android (android-client)
+# =========================
+.gradle/
+build/
+local.properties
+*.iml
+.idea/
+
+# =========================
+# Logs & temp files
+# =========================
+*.log
+tmp/
+temp/
+
+# =========================
+# Editor / IDE
+# =========================
+.vscode/
+
+# =========================
+# Personal notes (never push)
+# =========================
+notes.md
+**/notes.md
