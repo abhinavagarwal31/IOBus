@@ -1,9 +1,8 @@
 import asyncio
 import json
 import time
-from typing import Set
 
-from config import HOST, PORT
+from .config import HOST, PORT
 
 from shared.protocol.events import (
     EventType,
@@ -17,6 +16,12 @@ from shared.protocol.events import (
     SystemCommandEvent,
 )
 
+from .input_injector import (
+    inject_keyboard_event,
+    inject_trackpad_event,
+    handle_system_command,
+)
+
 
 # -----------------------------
 # Event Parsing (JSON → Objects)
@@ -25,7 +30,7 @@ from shared.protocol.events import (
 def parse_event(data: dict) -> BaseEvent:
     """
     Convert raw JSON dict into a strongly-typed Event object.
-    This is the ONLY place where untrusted data becomes trusted.
+    This is the trust boundary of the system.
     """
 
     event_type = EventType[data["event_type"]]
@@ -61,23 +66,22 @@ def parse_event(data: dict) -> BaseEvent:
 
 
 # -----------------------------
-# Event Routing (Logic Layer)
+# Event Routing (Execution Layer)
 # -----------------------------
 
 def handle_event(event: BaseEvent) -> None:
     """
-    Route events to the correct subsystem.
-    For now, we only log them.
+    Route events to macOS input injection.
     """
 
     if isinstance(event, KeyboardEvent):
-        print(f"[KEYBOARD] {event}")
+        inject_keyboard_event(event)
 
     elif isinstance(event, TrackpadEvent):
-        print(f"[TRACKPAD] {event}")
+        inject_trackpad_event(event)
 
     elif isinstance(event, SystemCommandEvent):
-        print(f"[SYSTEM] {event}")
+        handle_system_command(event)
 
     else:
         print(f"[UNKNOWN EVENT] {event}")
